@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from g4f.client import Client
 from g4f.Provider import Yqcloud , OIVSCode , Dynaspark , MetaAI, TeachAnything, DeepInfraChat, PollinationsAI
 import markdown
-
+import os
 app = Flask(__name__)
 
 def get_result(question,output, selectedProvider, selectedModel):
@@ -36,4 +36,4 @@ def generate():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
