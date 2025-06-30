@@ -1,0 +1,343 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My ChatBot</title>
+  
+  <script>
+                   
+    function select_provider(){
+            
+      let selectedProvider = document.getElementById("provider").value;
+      
+      document.getElementById("Yqcloud_model").style.display= "none";
+      document.getElementById("TeachAnything_model").style.display = "none";
+      document.getElementById("PollinationsAI_model").style.display = "none";
+      document.getElementById("DeepInfraChat_model").style.display = "none";
+      document.getElementById("OIVSCode_model").style.display = "none";
+
+
+      if (selectedProvider == "Yqcloud") {
+          document.getElementById("Yqcloud_model").style.display= "inline";
+          
+      }
+      if (selectedProvider == "TeachAnything"){
+          document.getElementById("TeachAnything_model").style.display= "inline";
+          
+      }
+      if (selectedProvider == "PollinationsAI") {
+          document.getElementById("PollinationsAI_model").style.display= "inline";
+       
+      }
+      if (selectedProvider == "DeepInfraChat") {
+          document.getElementById("DeepInfraChat_model").style.display= "inline";
+         
+      }
+      if (selectedProvider == "OIVSCode"){
+          document.getElementById("OIVSCode_model").style.display= "inline";
+      }
+  }
+
+
+  let conversationHistory = ""; 
+  async function get_result(question) {
+    document.getElementById("ask").style.display="none";
+    document.getElementById("loading").style.display = "block";
+    
+    question = document.getElementById("question").value;
+    var output = document.getElementById("output");
+    reoutput = document.getElementById("reoutput");
+    reoutput.value = conversationHistory;
+    
+     
+    output.innerHTML += "🙍🏻‍♂️: " + question + "<br><br>🤖: Finding Your answer.... 🔍";
+    
+
+    document.getElementById("copy").style.display = "none";
+    document.getElementById("speak").style.display = "none";
+
+    var response = await fetch('/generate', {
+        method: 'POST',
+        body: new FormData(document.getElementById("form"))
+    });
+
+    document.getElementById("question").value = "";
+
+    var final_output = await response.text();
+                               
+
+    document.getElementById("copy").style.display = "block";
+    document.getElementById("speak").style.display = "block";
+
+    document.getElementById("ask").style.display="block";
+    document.getElementById("loading").style.display = "none";
+
+    copy_box = document.getElementById("copy_box");
+    copy_box.textContent = final_output;
+                                  
+
+    conversationHistory += "🙍🏻‍♂️: " + question + "<br><br>🤖: " + final_output + "\n\n";
+                                  
+
+    output.innerHTML = conversationHistory; 
+    
+}
+    
+    function copyToClipboard() {
+      var copy_box = document.getElementById("copy_box");
+      var tempTextArea = document.createElement("textarea");
+      tempTextArea.value = copy_box.textContent;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempTextArea);
+      alert("Copied to Clipboard!!");
+    }
+    function speakOutput() {
+      copy_box = document.getElementById("copy_box");
+      var speak = document.getElementById("copy_box").textContent;
+      var speech = new SpeechSynthesisUtterance(speak);
+      speech.lang = "en-US";
+      speech.pitch = 1; 
+      speech.rate = 1; 
+      speechSynthesis.speak(speech);
+    }
+    
+    
+  </script>
+  </script>
+  
+  <style>
+    body {
+      background-color: rgb(0, 0, 0);
+      color: white;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    
+    .heading {
+      font-size: 50px;
+      font-weight: 1000;
+      color: red;
+      background-color: black;
+      text-shadow: 10px 10px 30px rgb(255, 0, 0), -10px -10px 30px rgb(255, 0, 0);
+    }
+    
+    .btn {
+      font-size: 30px;
+      background-color: rgb(0, 241, 12);
+      height: 50px;
+      width: 3cm;
+      border-radius: 50px;
+      font-weight: 700;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      cursor: pointer;
+      box-shadow: 4px 4px 80px rgb(17, 255, 0), -4px -4px 80px rgb(0, 255, 60);
+    }
+   
+    .btn:hover {
+      background-color: rgb(67, 255, 46);
+      box-shadow: 5px 5px 80px rgb(22, 175, 19), -5px -5px 80px rgb(0, 255, 102);
+      transition-duration: 120ms;
+    }
+    
+    .btn:active {
+      background-color: rgb(156, 255, 133);
+      box-shadow: 5px 5px 80px rgb(88, 207, 86), -5px -5px 80px rgb(75, 202, 126);
+      animation: spin 2s;
+    }
+    
+    .mb-3 {
+      color: white;
+      border-radius: 40px;
+      font-size: 25px;
+      font-weight: 500;
+      position: relative;
+      top: 10px;
+      box-shadow: 4px 4px 70px rgb(182, 35, 255);
+    }
+    
+    #output {
+      color: white;
+      text-align: left;
+      font-size: 19px;
+      
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #333;
+      border-radius: 15px;
+      font-weight: 700;
+    }
+    
+    #question {
+      box-shadow: 5px 5px 30px aqua, -5px -5px 30px rgba(0, 234, 255, 0.988);
+      border-radius: 80px;
+      width: 98%;
+      height: 40px;
+      font-size: 20px;
+      border: none;
+      margin-top: 20px;
+      padding-left: 15px;
+    }
+    
+    #copy {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: black;
+      color: white;
+      border-radius: 50px;
+      width: 59px;
+      height: 25px;
+      font-size: 18px;
+      cursor: pointer;
+      display: none;
+    }
+    #speak{
+      position: absolute;
+      right: 70px;
+      top: 3px;
+      display: none;
+      cursor: pointer;
+    }
+    
+    .lds-facebook,
+    .lds-facebook div {
+      box-sizing: border-box;
+      color: rgb(0, 0, 0);
+      position: absolute;
+      bottom: 50%;
+      left: 10px;
+      
+    }
+    .lds-facebook {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    .lds-facebook div {
+      display: inline-block;
+      position: absolute;
+      left: 8px;
+      width: 16px;
+      background: currentColor;
+      animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+    }
+    .lds-facebook div:nth-child(1) {
+      left: 8px;
+      animation-delay: -0.24s;
+    }
+    .lds-facebook div:nth-child(2) {
+      left: 32px;
+      animation-delay: -0.12s;
+    }
+    .lds-facebook div:nth-child(3) {
+      left: 56px;
+      animation-delay: 0s;
+    }
+    @keyframes lds-facebook {
+      0% {
+        top: 8px;
+        height: 45px;
+      }
+      50%, 100% {
+        top: 30px;
+        height: 32px;
+      }
+      
+    }
+
+
+  </style>
+</head>
+
+<body>
+  <center>
+    <h1 class="heading">✦ 𝕸𝖞 𝕮𝖍𝖆𝖙𝕭𝖔𝖙 ✦</h1>
+    <div style="width: 90%;">
+      <form id="form" onsubmit="event.preventDefault(); get_result(question);">
+        <div class="mb-3">
+          <label for="question" class="form-label">Type your question below:</label>
+          <textarea  id="question" name="question" required placeholder="Any Question..."></textarea>
+        </div>
+                                  <br><br>
+        <select name="provider" id="provider" onchange="select_provider()">
+            <option value="Yqcloud">Yqcloud</option>
+            <option value="TeachAnything">TeachAnything</option>
+            <option value="PollinationsAI">PollinationsAI</option>
+            <option value="DeepInfraChat">DeepInfraChat</option>
+            <option value="OIVSCode">OIVSCode</option>
+
+        </select>
+        <select name="Yqcloud_model" id="Yqcloud_model" onchange="document.getElementById('selectedModel').value= this.value" >
+            <option value="gpt-4">gpt-4</option>
+        </select>
+
+        <select name="TeachAnything_model" id="TeachAnything_model" style="display: none;" onchange="document.getElementById('selectedModel').value= this.value" >
+            <option value="gemini-1.5-pro">gemini-1.5-pro</option>
+            <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+        </select>
+
+        <select name="PollinationsAI_model" id="PollinationsAI_model" style="display: none;" onchange="document.getElementById('selectedModel').value= this.value" >
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
+            <option value="gpt-4o">gpt-4o</option>
+            <option value="o1-mini">o1-mini</option>
+            <option value="qwen-2.5-coder-32b">qwen-2.5-coder-32b</option>
+            <option value="llama-3.3-70b">llama-3.3-70b</option>
+            <option value="mistral-nemo">mistral-nemo</option>
+            <option value="llama-3.1-8b">llama-3.1-8b</option>
+            <option value="deepseek-r1">deepseek-r1</option>
+            <option value="phi-4">phi-4</option>
+            <option value="qwq-32b">qwq-32b</option>
+            <option value="deepseek-v3">deepseek-v3</option>
+            <option value="llama-3.2-11b">llama-3.2-11b</option>
+        </select>
+
+        <select name="DeepInfraChat_model" id="DeepInfraChat_model" style="display: none;" onchange="document.getElementById('selectedModel').value= this.value">
+            <option value="llama-3.1-8b">llama-3.1-8b</option>
+            <option value="llama-3.2-90b">llama-3.2-90b</option>
+            <option value="llama-3.3-70b">llama-3.3-70b</option>
+            <option value="deepseek-v3">deepseek-v3</option>
+            <option value="mixtral-small-24b">mixtral-small-24b</option>
+            <option value="deepseek-r1">deepseek-r1</option>
+            <option value="phi-4">phi-4</option>
+            <option value="wizardlm-2-8x22b">wizardlm-2-8x22b</option>
+            <option value="qwen-2.5-72b">qwen-2.5-72b</option>
+            <option value="qwen-2-72b">qwen-2-72b</option>
+            <option value="dolphin-2.6">dolphin-2.6</option>
+            <option value="dolphin-2.9">dolphin-2.9</option>
+            <option value="dbrx-instruct">dbrx-instruct</option>
+            <option value="airoboros-70b">airoboros-70b</option>
+            <option value="lzlv-70b">lzlv-70b</option>
+            <option value="wizardlm-2-7b">wizardlm-2-7b</option>
+            <option value="mixtral-8x22b">mixtral-8x22b</option>
+            <option value="minicpm-2.5">minicpm-2.5</option>
+        </select>
+        <select name="OIVSCode_model" id="OIVSCode_model" style="display: none;" onchange="document.getElementById('selectedModel').value= this.value">
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+          <option value="deepseek-v3">deepseek-v3</option>
+
+           
+        </select>
+
+
+        <br>
+        
+        <button type="submit" class="btn"><div id="ask">Ask...</div><div class="lds-facebook" id="loading" style="display: none;"><div></div><div></div><div></div></div></button>
+        
+        <div class="mb-3">
+          <strong>Answer:</strong>
+          <button id="copy" onclick="event.preventDefault(); copyToClipboard();">📋</button> 
+          <button id="speak" onclick="event.preventDefault();speakOutput()">🔊</button>
+        </div>        
+        <div id="output"></div>
+        <input type="hidden" id="reoutput" name="reoutput">
+        <input type="hidden" id="selectedModel" name="selectedModel">
+      </form>
+      <div id= "copy_box" style = "display:none;"></div>
+    </div>
+  </center>
+</body>
+</html>
